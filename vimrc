@@ -2,9 +2,10 @@ set nocompatible
 " 文件格式开启
 syntax on
 set nu!
-set autoindent
 filetype on
 filetype plugin on
+" 允许用退格键删除字符
+set backspace=indent,eol,start           
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 Plugin 'VundleVim/Vundle.vim'
@@ -26,6 +27,10 @@ Plugin 'jiangmiao/auto-pairs'
 Plugin 'dracula/vim'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'fatih/vim-go'
+Plugin 'godlygeek/tabular'
+Plugin 'preservim/vim-markdown'
+Plugin 'ianding1/leetcode.vim'
+
 
 
 
@@ -182,3 +187,12 @@ noremap <F7> :AsyncRun gcc "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENAME)"
 " 防止误触
 inoremap <F1> <Esc>
 nnoremap <F1> <Esc>
+
+" lc配置
+let g:leetcode_china=1  "中国区leetcode"
+let g:leetcode_solution_filetype='python3'    "默认使用python3"
+let g:leetcode_browser='chrome'   "登录leetcode-cn.com的浏览器"
+nnoremap <leader>ll :LeetCodeList<cr>
+nnoremap <leader>lt :LeetCodeTest<cr>
+nnoremap <leader>ls :LeetCodeSubmit<cr>
+nnoremap <leader>li :LeetCodeSignIn<cr>

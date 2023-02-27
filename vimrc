@@ -14,7 +14,6 @@ Plugin 'skywind3000/asyncrun.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'preservim/nerdcommenter'
 Plugin 'honza/vim-snippets'
-Plugin 'junegunn/fzf.vim'
 Plugin 'w0rp/ale'
 Plugin 'Valloric/YouCompleteMe'
 Plugin 'jistr/vim-nerdtree-tabs'
@@ -30,6 +29,12 @@ Plugin 'fatih/vim-go'
 Plugin 'godlygeek/tabular'
 Plugin 'preservim/vim-markdown'
 Plugin 'ianding1/leetcode.vim'
+Plugin 'mbbill/undotree'
+Plugin 'mbbill/echofunc'
+Plugin 'taoso/fzf.vim'
+Plugin 'rking/ag.vim'
+Plugin 'mileszs/ack.vim'
+Plugin 'taoso/mru.vim'
 
 
 
@@ -196,3 +201,55 @@ nnoremap <leader>ll :LeetCodeList<cr>
 nnoremap <leader>lt :LeetCodeTest<cr>
 nnoremap <leader>ls :LeetCodeSubmit<cr>
 nnoremap <leader>li :LeetCodeSignIn<cr>
+
+
+" 操作历史
+set undodir=~/.undodir/
+set undofile
+nnoremap <C-H> :UndotreeToggle<cr>
+
+
+" 错误展示
+set errorformat=\ %#%f(%l\\\,%c):\ %m
+
+
+" 模糊搜索
+nnoremap <c-p> :call fzf#Open()<cr>
+
+" 历史访问目录
+nnoremap <c-u> :Mru<cr>
+
+
+" 异步执行 F5 编译，F6运行
+let g:asyncrun_open=10
+let g:asyncrun_save=1
+noremap <silent> <F5> :call CompileBuild()<CR>
+func! CompileBuild()
+    exec "w"
+    if &filetype == 'c'
+    ¦   exec ':AsyncRun -mode=term2 -pos=bottom -rows=10 -focus=0 gcc "$(VIM_FILEPATH)" -o "$(VIM_FILEDIR)/$(VIM_FILENOEXT)"'
+    elseif &filetype == 'cpp'
+    ¦   exec ':AsyncRun -mode=term2 -pos=bottom -rows=10 -focus=0 bcloud build'
+    elseif &filetype == 'go'
+    ¦   exec ":AsyncRun -mode=term2 -pos=bottom -rows=10 -focus=0 go build"
+    endif
+endfunc
+noremap <silent> <F6> :call CompileRun()<CR>
+func! CompileRun()
+    exec "w"
+    if &filetype == 'c'
+    ¦   exec ":AsyncRun -mode=term -pos=bottom -rows=10 -focus=0 $(VIM_FILEDIR)/$(VIM_FILENOEXT)"
+    elseif &filetype == 'cpp'
+    ¦   exec ":AsyncRun -mode=term -pos=bottom -rows=10 -focus=0 $(VIM_FILEDIR)/$(VIM_FILENOEXT)"
+    elseif &filetype == 'python'
+    ¦   exec ":AsyncRun -mode=term -pos=bottom -rows=10 -focus=0 python3 $(VIM_FILEPATH)"
+    elseif &filetype == 'html'
+    ¦   exec ":AsyncRun -mode=term -pos=hide open $(VIM_FILEPATH)"
+    elseif &filetype == 'go'
+    ¦   exec ":AsyncRun -mode=term -pos=bottom -rows=10 -focus=0 go run $(VIM_FILEPATH)"
+    elseif &filetype == 'javascript'
+    ¦   exec ":AsyncRun -mode=term -pos=bottom -rows=10 -focus=0 node $(VIM_FILEPATH)"
+    endif
+endfunc
+
+
